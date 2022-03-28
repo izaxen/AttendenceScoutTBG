@@ -8,7 +8,11 @@
           <div class="member-present">
             <label>
               Närvarande:
-              <input type="checkbox" v-model="presentMembers" :value="member.id" />
+              <input
+                type="checkbox"
+                v-model="presentMembers"
+                :value="member.id"
+              />
               <span class="checkmark"></span>
             </label>
           </div>
@@ -23,7 +27,7 @@
           <div class="member-present">
             <label>
               Närvarande:
-              <input type="checkbox" v-model="presentMembers" :value="member.memberNo"/>
+              <input type="checkbox" v-model="presentMembers" :value="member.memberNo" />
               <span class="checkmark"></span>
             </label>
           </div>
@@ -57,10 +61,13 @@
 <script>
 export default {
   props: ["selectedMeeting"],
+
   async created() {
     this.unitMembers = await this.$store.dispatch('userStore/getUnitMembers');
     this.tempAttendents = await this.$store.dispatch('userStore/getTempAttendents')
     this.unitLeaders = await this.$store.dispatch('userStore/getUnitLeaders')
+    //this.presentMembers = await this.$store.dispatch('meetingStore/getMeetingAttendents', this.selectedMeeting.id)
+
 
   },
 
@@ -69,9 +76,10 @@ export default {
       unitMembers: this.$store.getters['userStore/unitMembers'],
       presentMembers: [],
       tempAttendents: [],
-      unitLeaders:[],
+      unitLeaders: [],
     }
   },
+
   computed: {
     getUnitMembers() {
       return this.unitMembers;
@@ -79,31 +87,46 @@ export default {
     getTempAttendents() {
       return this.tempAttendents;
     },
-    getChosenMeeting() {
+    getSelectedMeeting() {
+      console.log("kör selected");
       return this.selectedMeeting
     },
     getPresentMembers() {
+      console.log(this.presentMembers);
       return this.presentMembers;
     },
-    getUnitLeaders(){
+    getUnitLeaders() {
       return this.unitLeaders
     }
   },
-  
+
   methods: {
     createTempAttendent() {
       this.$router.push('create-temp-attendent')
     },
     saveMeetingAttendence() {
-    const meetingAttendents = {
-      eventID:this.selectedMeeting,
-      attendents: this.presentMembers
-    }
-    this.$store.dispatch('meetingStore/saveMeetingAttendents', meetingAttendents);
-    this.$router.go(-1)
+      const meetingAttendents = {
+        eventID: this.selectedMeeting,
+        attendents: this.presentMembers
+      }
+      this.$store.dispatch('meetingStore/saveMeetingAttendents', meetingAttendents);
+      this.$router.go(-1)
     },
+    async setPresentMembers() {
+      this.presentMembers = await this.$store.dispatch('meetingStore/getMeetingAttendents', this.selectedMeeting.id)
+      console.log(this.presentMembers);
+    }
 
-  }
+  },
+  watch: {
+   /*  selectedMeeting: async function () {
+      await this.setPresentMembers()
+    }, */
+    presentMembers: function(){
+      
+      console.log(this.presentMembers);
+    }
+  },
 
 }
 </script>
@@ -144,11 +167,11 @@ h3 {
 }
 
 button:hover {
-background-color:#9adff4a8;
-scale: 1.1;
+  background-color: #9adff4a8;
+  scale: 1.1;
 }
 
-.center{
+.center {
   align-self: center;
 }
 .disabled {
@@ -156,5 +179,4 @@ scale: 1.1;
   pointer-events: none;
   opacity: 0.6;
 }
-
 </style>

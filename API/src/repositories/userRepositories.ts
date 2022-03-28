@@ -20,8 +20,8 @@ async function getUnitMembersRepo(unit: string) {
 }
 
 async function getTempAttendentsRepo(unit: string) {
-  const query = db.prepare(`SELECT * FROM tempAttendents WHERE unit = ?`);
-  return query.all(unit)
+  const query = db.prepare(`SELECT * FROM tempAttendents WHERE unit = ? AND created > ?`);
+  return query.all(unit, (Date.now() - 1651532400))
 }
 
 async function addLeadersToDBRepo(leader: Leader) {

@@ -18,3 +18,7 @@ export interface MeetingCollection{
   eventID: number,
   attendents:[]
 }
+
+export interface MeetingID{
+ eventID:number
+}

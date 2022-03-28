@@ -3,11 +3,21 @@
     <div class="selector-container">
       <select v-model="selectedMeeting" class="selector">
         <option disabled value selected>Välj möte att rapportera</option>
-        <option
-          v-for="meeting in getMeetings"
-          :key="meeting"
-          :value="meeting.id"
-        >{{ meeting.fromDate }} - {{ meeting.activity }} - {{ meeting.place }}</option>
+        <optgroup label="Möte att rappotera närvaro för" v-if="getMeetings">
+          <option
+            v-for="(value, key) in getMeetings.filter(x => x !== null)"
+            :key="key"
+            :value="value"
+          >{{ value.activity }} - {{ value.place }} - {{ value.fromDate }}</option>
+        </optgroup>
+
+        <optgroup label="Färdigrapporterade möte">
+          <option
+            v-for="(value, key) in getReportedMeetings.filter(x => x !== null)"
+            :key="key"
+            :value="value"
+          >{{ value.activity }} - {{ value.place }} - {{ value.fromDate }}</option>
+        </optgroup>
       </select>
     </div>
     <div class="unit-members">
@@ -21,7 +31,8 @@ import ListMembers from "../components/ListMembers.vue";
 export default {
   data() {
     return {
-      meetings: this.$store.getters["userStore/meetings"],
+      meetings: [],
+      reportedMeetings: [],
       selectedMeeting: "",
     };
   },
@@ -29,15 +40,19 @@ export default {
     getMeetings() {
       return this.meetings;
     },
+    getReportedMeetings() {
+      return this.reportedMeetings;
+    },
     getSelectedMeeting() {
       return this.selectedMeeting;
     },
   },
   async created() {
-    this.meetings = await this.$store.dispatch("meetingStore/getActiveMeetings");
+    this.meetings = await this.$store.dispatch("meetingStore/getUnreportedMeetings");
+    this.reportedMeetings = await this.$store.dispatch("meetingStore/getReportedMeetings");
   },
   methods: {
-   
+
   },
   components: { ListMembers }
 }

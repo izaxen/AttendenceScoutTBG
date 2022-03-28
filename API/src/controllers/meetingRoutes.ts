@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
 import { Meeting, MeetingBase } from '../models/meeting'
-import { updateMeeting, getActiveMeetings, saveMeetingAttendents, getAllUnits, createNewMeeting } from '../logic/meetingLogic'
+import { updateMeeting, getActiveMeetings, saveMeetingAttendents, getAllUnits, createNewMeeting, getReportedMeetings, getUnreportedMeetings, getMeetingAttendents } from '../logic/meetingLogic'
 import { authenticate } from '../middleware/authentication'
 
 const router: Router = Router();
@@ -8,8 +8,7 @@ const router: Router = Router();
 router.use(authenticate)
 
 router.get("/getActiveMeetings", async (_, res: Response) => {
-  const meetings: [] = await getActiveMeetings();
-  return res.json(meetings);
+  return res.json(await getActiveMeetings());
 })
 
 router.post("/saveMeetingAttendents", async (req: Request, res: Response) => {
@@ -25,8 +24,19 @@ router.post("/createNewMeeting", async (req: Request, res: Response) => {
 })
 
 router.get("/getAllUnits", async (_, res: Response) => {
-  const units:[] = await getAllUnits();
-  return res.json(units)
+  return res.json(await getAllUnits())
+})
+
+router.get("/getReportedMeetings", async (_, res: Response) => {
+  return res.json(await getReportedMeetings())
+})
+
+router.get("/getUnreportedMeetings", async (_, res: Response) => {
+  return res.json(await getUnreportedMeetings());
+})
+
+router.post("/getMeetingAttendents", async (req: Request, res: Response) => {
+return res.json(await getMeetingAttendents(req.body.id));
 })
 
 export = router;

@@ -45,7 +45,31 @@ const meetingStore = {
       return meetings;
     },
 
+    async getReportedMeetings() {
+      let res = await fetch('api/meetings/getReportedMeetings', {
+        method: 'GET'
+      });
+      return res.json();
 
+    },
+    async getUnreportedMeetings() {
+      let res = await fetch('api/meetings/getUnreportedMeetings', {
+        method: 'GET'
+      });
+      return res.json();
+    },
+
+    async getMeetingAttendents(_, chosenMeeting) {
+      let res = await fetch('api/meetings/getMeetingAttendents', {
+        method: 'POST',
+        body: JSON.stringify({ id: chosenMeeting })
+      })
+      const attendents = await res.json()
+
+      console.log(attendents);
+      return attendents;
+      
+    }
   },
 }
 export default meetingStore;

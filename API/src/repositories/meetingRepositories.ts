@@ -44,6 +44,18 @@ async function getAllUnitsRepo() {
 //  query.run(unit)
 }*/
 
-export { updateMeetingRepo, createNewMeetingRepo, getActiveMeetingsRepo, saveMeetingAttendentsRepo, getAllUnitsRepo, saveMeetingTempAttendentsRepo }
+async function getReportedMeetingsRepo() {
+  const query = db.prepare(`SELECT DISTINCT eventID FROM meetingAttendents`)
+  return query.all();
+}
+
+async function getMeetingAttendentsRepo(meetingID: number) {
+  console.log(meetingID);
+  
+  const query = db.prepare(`SELECT * FROM meetingAttendents WHERE eventID =? `)
+  return query.all(meetingID)
+}
+
+export { updateMeetingRepo, createNewMeetingRepo, getActiveMeetingsRepo, saveMeetingAttendentsRepo, getAllUnitsRepo, saveMeetingTempAttendentsRepo, getReportedMeetingsRepo, getMeetingAttendentsRepo }
 
 

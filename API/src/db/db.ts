@@ -14,8 +14,8 @@ const getDb = () => {
 const initDb = () => {
   if (db) return db;
   db = new Database('src/db/database.db');
-  checkAndInitTables();
-  //splittUnits();
+  //checkAndInitTables();
+  //splittApiUrl();
   //createDbFromScoutnet();
   return db;
 }
@@ -33,7 +33,7 @@ const checkAndInitTables = () => {
   const units = db.prepare(querysCreate.createTableUnits);
 
   const unitLeadersDrop = db.prepare(querysDrop.dropTableUnitLeaders);
-  //unitLeadersDrop.run();
+  unitLeadersDrop.run();
 
   viewStatistiscPresensMember.run();
   viewStatistiscPresensTempAttendent.run();
@@ -47,21 +47,30 @@ const checkAndInitTables = () => {
   units.run();
 }
 
-async function splittUnits() {
-  const http: string[] = [process.env.API_SCOUTNET_GNUTTARNA as string, process.env.API_SCOUTNET_SLEMMISARNA as string, process.env.API_SCOUTNET_ROVDJUREN as string, process.env.API_SCOUTNET_ROVFAGLARNA as string, process.env.API_SCOUTNET_SKOGSFAGLARNA as string, process.env.API_SCOUTNET_BJORNARNA as string, process.env.API_SCOUTNET_INSEKTERNA as string]
+async function splittApiUrl() {
+  const api: string = process.env.API_SCOUTNET!;
+  let http: string[] = [process.env.API_SCOUTNET_GNUTTARNA as string, process.env.API_SCOUTNET_SLEMMISARNA as string, process.env.API_SCOUTNET_ROVDJUREN as string, process.env.API_SCOUTNET_ROVFAGLARNA as string, process.env.API_SCOUTNET_SKOGSFAGLARNA as string, process.env.API_SCOUTNET_BJORNARNA as string, process.env.API_SCOUTNET_INSEKTERNA as string, process.env.API_SCOUTNET_MULLE_MECK as string]
+
   const units = http.map(async unit => {
     const httpSplitt: string[] = unit.split("\,");
-    await getLeadersFromScoutnet(httpSplitt)
-    return httpSplitt[1]
+    await getLeadersFromScoutnet(api.concat(httpSplitt[0]), httpSplitt[1]);
+    return httpSplitt[1];
   });
+
+  Promise.all(units).then((results) => results.forEach((result) => setUnits(result)));
+
 }
 
+async function setUnits(units: string) {
 
-async function getLeadersFromScoutnet(unitList) {
-  const leaderList: AxiosResponse = await axios.get(unitList[0]);
+  
+}
+
+async function getLeadersFromScoutnet(unitUrl: string, unit: string) {
+  const leaderList: AxiosResponse = await axios.get(unitUrl);
   const leader = Object.entries(leaderList.data.data)
-  leader.forEach(async(lead) => {
-  await  addLeadersToDB(createNewLeader(lead[1], unitList[1]))
+  leader.forEach(async (lead) => {
+    await addLeadersToDB(createNewLeader(lead[1], unit))
   })
 }
 

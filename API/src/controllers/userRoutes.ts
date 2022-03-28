@@ -1,4 +1,4 @@
-import { Request, Response, Router, NextFunction, response } from "express";
+import { Request, Response, Router, NextFunction } from "express";
 import { createTempAttendent, getUnitMembers, getTempAttendents, getUnitLeaders } from "../logic/userLogic";
 import { AttendentBase } from "../models/attendents";
 import { authenticate } from '../middleware/authentication'
