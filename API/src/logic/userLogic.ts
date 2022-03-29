@@ -33,10 +33,12 @@ async function getUnitLeaders() {
 }
 
 async function validateLeader(name: string, surName: string) {
-  const leader: Leader = await validateLeaderRepo(name, surName);
-  setActiveUser(leader)
-  if (getActiveUser()) return true
+  const leader: Leader[] = await validateLeaderRepo(name, surName);
+  if (leader.length === 1) {
+    setActiveUser(leader[0])
+  }
 
+  if (getActiveUser()) return true
   else return false;
 }
 

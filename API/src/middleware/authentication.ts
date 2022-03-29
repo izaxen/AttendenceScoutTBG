@@ -17,13 +17,10 @@ const authenticate = (req: Request, res: Response, next: NextFunction) => {
   }
   if (token === null) { login; }
   verify().then(() => {
-    console.log(getActiveUser());
     next();
   }).catch(err => {
     res.send({ isAuth: false })
   })
- 
- 
 }
 
 const login = (req: Request, res: Response, next: NextFunction) => {

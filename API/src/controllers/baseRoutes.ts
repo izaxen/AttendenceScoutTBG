@@ -15,7 +15,9 @@ router.get('/logout', (_, res: Response) => {
 })
 
 router.get('/whoAmI', authenticate, async (req: Request, res: Response) => {
-  return res.json({ isAuth: true, user: { userName: getActiveUser()[0].name + " " + getActiveUser()[0].surName, unit: getActiveUser()[0].unit } });
+  console.log("whoami", getActiveUser());
+  
+  return res.json({ isAuth: true, user: { userName: getActiveUser().name + " " + getActiveUser().surName, unit: getActiveUser().unit } });
 })
 
 export = router;
