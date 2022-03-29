@@ -2,23 +2,28 @@ import { NextFunction, Request, Response } from "express";
 import { OAuth2Client } from 'google-auth-library';
 import { validateLeader } from "../logic/userLogic";
 import { getActiveUser } from "./setIdentity";
+import jwt_decode, { JwtDecodeOptions } from 'jwt-decode'
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const authenticate = (req: Request, res: Response, next: NextFunction) => {
   let token = req.cookies['Session-Token'];
+
   async function verify() {
-    await client.verifyIdToken({
-      idToken: token,
-      audience: process.env.GOOGLE_CLIENT_ID, 
-    });
+    let token1: JwtDecodeOptions = jwt_decode(token);
+    if (!getActiveUser()) {
+      await validateLeader(token1['given_name'], token1['family_name'])
+    }
+
   }
-  verify()
-    .then(() => {
-      next();
-    })
-    .catch(err => {
-      res.send({isAuth:false})
-    })
+  if (token === null) { login; }
+  verify().then(() => {
+    console.log(getActiveUser());
+    next();
+  }).catch(err => {
+    res.send({ isAuth: false })
+  })
+ 
+ 
 }
 
 const login = (req: Request, res: Response, next: NextFunction) => {
@@ -37,7 +42,7 @@ const login = (req: Request, res: Response, next: NextFunction) => {
     //if (user.validateEmail === "trelleborgsscoutkar.se"|| user.email === 'izaxen@telia.com') {
     if (user.validateEmail === "trelleborgsscoutkar.se") {
       const valiDate: boolean = await validateLeader(user.name, user.surName)
-      if(!valiDate) throw new Error('Not auth')
+      if (!valiDate) throw new Error('Not auth')
     }
     else throw new Error('Not Auth')
 
@@ -53,4 +58,4 @@ const login = (req: Request, res: Response, next: NextFunction) => {
 
 
 
-export {authenticate, login};
+export { authenticate, login };
