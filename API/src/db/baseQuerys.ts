@@ -81,5 +81,7 @@ const createTableUnits: string = `CREATE TABLE IF NOT EXISTS units(id INTEGER PR
 
 const dropTableUnitLeaders: string = `DROP TABLE IF EXISTS unitLeaders`
 
+const dropTableUnits: string = `DROP TABLE IF EXISTS units`
+
 export const querysCreate = { createStatisticReportMemberView, createStatisticPresensMemberView, createStatisticReportTempAttendentView, createStatisticPresensTempAttendentView, createTableAttendents, createTableMeetings, createTableTempAttendent, createTableMeetingAttendents, createTableUnitLeaders, createTableUnits }
-export const querysDrop = { dropTableUnitLeaders }
+export const querysDrop = { dropTableUnitLeaders, dropTableUnits }

@@ -33,7 +33,10 @@ const checkAndInitTables = () => {
   const units = db.prepare(querysCreate.createTableUnits);
 
   const unitLeadersDrop = db.prepare(querysDrop.dropTableUnitLeaders);
+  const unitsDrop = db.prepare(querysDrop.dropTableUnits)
   unitLeadersDrop.run();
+  unitsDrop.run();
+
 
   viewStatistiscPresensMember.run();
   viewStatistiscPresensTempAttendent.run();
@@ -62,7 +65,7 @@ async function splittApiUrl() {
 }
 
 async function setUnits(units: string) {
-
+  await createAllUnits(units);
   
 }
 
@@ -84,7 +87,7 @@ function createNewLeader(member: any, unit: string) {
   }
 }
 async function createDbFromScoutnet() {
-  const memberList: AxiosResponse = await axios.get(process.env.API_SCOUTNET as string);
+  const memberList: AxiosResponse = await axios.get(process.env.API_SCOUTNET_ALL as string);
   const member = Object.entries(memberList.data.data)
   member.forEach(element => {
     createAttendent(createNewAttendent(element[1]));

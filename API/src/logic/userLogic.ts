@@ -1,5 +1,6 @@
 import { Attendent, AttendentBase, Leader, TempAttendent } from '../models/attendents'
 import { createTempAttendentRepo, createAttendentRepo, getUnitMembersRepo, getTempAttendentsRepo, addLeadersToDBRepo, getUnitLeadersRepo, validateLeaderRepo } from '../repositories/userRepositories'
+import { setAllUnitRepo } from '../repositories/meetingRepositories'
 import { setActiveUser, getActiveUser } from '../middleware/setIdentity'
 
 function createTempAttendent(tempAttendent: AttendentBase) {
@@ -39,7 +40,8 @@ async function validateLeader(name: string, surName: string) {
   else return false;
 }
 
-async function createAllUnits() {
+async function createAllUnits(unit: string) {
+  await setAllUnitRepo(unit);
 }
 
 

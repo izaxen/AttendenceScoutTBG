@@ -39,10 +39,10 @@ async function getAllUnitsRepo() {
   return query.all();
 }
 
-/*async function setAllUnitRepo(unit: string) {
-//  const query = db.prepare('INSERT OR REPLACE INTO units(unit) VALUES(?)')
-//  query.run(unit)
-}*/
+async function setAllUnitRepo(unit: string) {
+  const query = db.prepare('INSERT OR REPLACE INTO units(unit) VALUES(?)')
+  query.run(unit)
+}
 
 async function getReportedMeetingsRepo() {
   const query = db.prepare(`SELECT DISTINCT eventID FROM meetingAttendents`)
@@ -51,11 +51,11 @@ async function getReportedMeetingsRepo() {
 
 async function getMeetingAttendentsRepo(meetingID: number) {
   console.log(meetingID);
-  
+
   const query = db.prepare(`SELECT * FROM meetingAttendents WHERE eventID =? `)
   return query.all(meetingID)
 }
 
-export { updateMeetingRepo, createNewMeetingRepo, getActiveMeetingsRepo, saveMeetingAttendentsRepo, getAllUnitsRepo, saveMeetingTempAttendentsRepo, getReportedMeetingsRepo, getMeetingAttendentsRepo }
+export { updateMeetingRepo, createNewMeetingRepo, getActiveMeetingsRepo, saveMeetingAttendentsRepo, getAllUnitsRepo, saveMeetingTempAttendentsRepo, getReportedMeetingsRepo, getMeetingAttendentsRepo, setAllUnitRepo }
 
 
